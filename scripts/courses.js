@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const descInput = document.getElementById("courseDesc");
   const unitsInput = document.getElementById("courseUnits");
   const yearInput = document.getElementById("courseYear");
-  const timeInput = document.getElementById("courseTime");
   const priceInput = document.getElementById("coursePrice");
 
   const editIndexInput = document.getElementById("editIndex");
@@ -65,13 +64,18 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // ✅ Get time values here
+    const timeStart = document.getElementById("courseTimeStart").value;
+    const timeEnd = document.getElementById("courseTimeEnd").value;
+    const timeSlot = `${timeStart} - ${timeEnd}`;
+
     const course = {
       code: codeInput.value,
       name: nameInput.value,
       description: descInput.value,
       units,
       year,
-      time: timeInput.value,
+      time: timeSlot,
       pricePerUnit: price
     };
 
@@ -102,8 +106,14 @@ document.addEventListener("DOMContentLoaded", () => {
         descInput.value = c.description;
         unitsInput.value = c.units;
         yearInput.value = c.year;
-        timeInput.value = c.time;
         priceInput.value = c.pricePerUnit;
+
+        // ✅ Split time back into start & end
+        if (c.time) {
+          const [start, end] = c.time.split(" - ");
+          document.getElementById("courseTimeStart").value = start || "";
+          document.getElementById("courseTimeEnd").value = end || "";
+        }
 
         modal.classList.remove("hidden");
         modal.classList.add("flex");
