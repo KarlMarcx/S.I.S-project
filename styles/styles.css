@@ -1,3 +1,16 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+body, html {
+  font-family: 'Bebas Neue', sans-serif;
+
+  pangit ang font
+} */
+
+h1, h2, h3, .dashboard-title, .dashboard-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
 
 .bg-maroon { background-color: #800000; }
 .hover\:bg-maroon-dark:hover { background-color: #660000; }

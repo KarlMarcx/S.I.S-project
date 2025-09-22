@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
         yearInput.value = c.year;
         priceInput.value = c.pricePerUnit;
 
-        // ✅ Split time back into start & end
+        // spit tiem back into start and end inputs
         if (c.time) {
           const [start, end] = c.time.split(" - ");
           document.getElementById("courseTimeStart").value = start || "";
