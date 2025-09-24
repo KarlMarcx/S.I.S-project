@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Information System</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-gray-100 font-sans flex">
+
+    <!-- Sidebar -->
+    <aside class="bg-maroon text-white w-64 min-h-screen flex flex-col justify-between">
+        <nav class="p-6">
+            <h2 class="text-2xl font-bold mb-8">Admin Panel</h2>
+            <ul class="space-y-4">
+                <li><a href="/semester/" class="block w-full text-left hover:bg-maroon-dark p-2 rounded">Semester</a>
+                </li>
+                <li><a href="/students/" class="block w-full text-left hover:bg-maroon-dark p-2 rounded">Students</a>
+                </li>
+                <li><a href="/courses/" class="block w-full text-left hover:bg-maroon-dark p-2 rounded">Courses</a></li>
+                <li><a href="/billing/" class="block w-full text-left hover:bg-maroon-dark p-2 rounded">Billing</a></li>
+            </ul>
+        </nav>
+        <div class="p-6">
+            <a href="/" id="logoutBtn" class="block w-full text-left hover:bg-maroon-dark p-2 rounded">Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="mainContent" class="flex-1 p-6 space-y-6">
+
+        <!-- Page Header -->
+        {% block header %}
+        <div class="flex items-center mb-6">
+            <div class="flex-1 text-center">
+                <h2 class="text-2xl font-bold text-[#5e0b15]">Default Header</h2>
+            </div>
+        </div>
+        {% endblock %}
+
+        <!-- Main Page Content -->
+        {% block content %}
+        <!-- Default content -->
+        {% endblock %}
+
+        <!-- Modals -->
+        
+    </main>
+    
+    {% block modals %}{% endblock %}
+    <!-- JS -->
+    <script src="{% static 'js/logout.js' %}"></script>
+    {% block scripts %} {% endblock %}
+
+</body>
+
+</html>

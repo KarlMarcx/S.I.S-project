@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block header%}
+    <!-- Page Header -->
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-[#5e0b15]">Billing</h2>
+        <button id="newTransactionBtn"
+            class="bg-maroon text-white px-4 py-2 rounded-lg hover:bg-maroon-dark shadow">
+            ➕ New Transaction
+        </button>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <!-- Transactions Table -->
+    <div class="bg-white shadow rounded-lg p-6 border-[#5e0b15]">
+        <h3 class="text-lg font-semibold mb-4">Past Transactions</h3>
+        <table class="w-full border-collapse border border-gray-300" id="billingTable">
+            <thead class="bg-maroon text-white">
+                <tr>
+                    <th class="border p-2">Transaction ID</th>
+                    <th class="border p-2">Student ID</th>
+                    <th class="border p-2">Year</th>
+                    <th class="border p-2">Amount</th>
+                    <th class="border p-2">Type of Payment</th> <!-- Full / Partial -->
+                    <th class="border p-2">Mode of Payment</th> <!-- Cash / Online -->
+                    <th class="border p-2">Date</th>
+                    <th class="border p-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="billingTableBody">
+                <tr>
+                    <td colspan="9" class="border p-4 text-center text-gray-500">No transactions yet</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block modals %}
+    {% include "billing/modals/_search_modal.html" %}
+    {% include "billing/modals/_transaction_modal.html" %}
+{% endblock %}
+
+{% block scripts %}
+    <script type="module" src="{% static 'js/billing.js' %}"></script>
+{% endblock %}

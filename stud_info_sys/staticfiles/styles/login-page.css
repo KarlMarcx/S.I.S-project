@@ -1,0 +1,46 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.h-custom {
+    height: calc(100% - 73px);
+}
+
+@media (max-width: 450px) {
+    .h-custom {
+        height: 100%;
+    }
+}
+
+.bg-maroon {
+    background-color: #490510 !important;
+}
+
+.btn-maroon {
+    background-color: #AF2532;
+    border-color: #AF2532;
+    color: #fff;
+    /* keep text readable */
+}
+
+.btn-maroon:hover {
+    background-color: maroon;
+    /* darker shade on hover */
+    border-color: maroon;
+    color: #fff
+}
+
+.input-text:focus {
+    border-color: darkred;
+    box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.25);
+    /* Bootstrap-like glow */
+
+}
