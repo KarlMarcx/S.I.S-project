@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sis_db',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '_08blink22_',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {

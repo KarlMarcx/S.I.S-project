@@ -24,9 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Generate sequential student ID
   function generateStudentId() {
-    let lastId = loadData("lastStudentId", "2025000");
+    // let lastId = loadData("lastStudentId", "2025000");
+    let lastId=JSON.parse(localStorage.getItem("lastStudentId")) || "2025000";
     const newId = (parseInt(lastId, 10) + 1).toString();
     saveData("lastStudentId", newId);
+
     return newId;
   }
 
