@@ -12,16 +12,16 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Student',
+            name='Courses',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(max_length=100)),
-                ('last_name', models.CharField(max_length=100)),
-                ('email', models.EmailField(max_length=254, unique=True)),
-                ('date_of_birth', models.DateField()),
-                ('phone', models.CharField(max_length=11)),
-                ('address', models.CharField(max_length=255)),
+                ('code', models.CharField(max_length=4)),
+                ('name', models.CharField(max_length=20)),
+                ('description', models.CharField(max_length=255)),
                 ('year_level', models.IntegerField()),
+                ('time_slot', models.CharField(max_length=50)),
+                ('units', models.PositiveIntegerField()),
+                ('price_per_unit', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('is_deleted', models.BooleanField(default=False)),
                 ('deleted_at', models.DateTimeField(blank=True, null=True)),
                 ('date_added', models.DateTimeField(auto_now_add=True)),

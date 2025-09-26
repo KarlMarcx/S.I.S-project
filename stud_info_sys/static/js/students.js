@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function getStudents() {
     const res = await fetch(`${API_URL}/`);
+    console.log(res)
     if (!res.ok) throw new Error("Failed to fetch students");
     return await res.json();
   }
@@ -190,15 +191,13 @@ async function renderStudentsTable() {
   } catch (err) {
     tableBody.innerHTML = `
       <tr>
-        <td colspan="8" class="border p-4 text-center text-red-500">
-          Error loading students: ${err.message}
+        <td colspan="8" class="border p-4 text-center text-gray-500">
+          Nothing to show
         </td>
       </tr>
     `;
   }
 }
-
-
 
   // Filter change event
   if (yearFilter) {
