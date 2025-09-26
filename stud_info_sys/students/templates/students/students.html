@@ -41,22 +41,14 @@
                     <th class="border p-2 text-left">Actions</th>
                 </tr>
             </thead>
-            <tbody id="studentsTableBody">
-                <tr>
-                  <td class="border p-2"></td>
-                  <td class="border p-2">z</td>
-                  <td class="border p-2"></td>
-                  <td class="border p-2"></td>
-                  <td class="border p-2"></td>
-                  <td class="border p-2"></td>
-                  <td class="border p-2"></td>
-                  <td class="border p-2"></td>
-                  <td class="border p-2 space-x-2">
-                    <button class="editBtn text-blue-600 hover:underline">Edit</button>
-                    <button class="deleteBtn text-red-600 hover:underline">Delete</button>
-                  </td>
-                </tr>
-            <tbody>
+        <tbody id="studentsTableBody">
+            <tr id="loadingRow">
+                <td colspan="8" class="border p-4 text-center text-gray-500">
+                Loading students...
+                </td>
+             </tr>
+        </tbody>
+
         </table>
     </div>
 {% endblock %}

@@ -1,8 +1,8 @@
-
-import { loadData, saveData } from "./utils/storage.js";
-import { renderTable, deleteItem } from "./utils/functions.js";
+import { renderTable } from "./utils/functions.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const API_URL = "http://127.0.0.1:8000/api/students";
+
   const addBtn = document.getElementById("addStudentBtn");
   const modal = document.getElementById("studentModal");
   const cancelBtn = document.getElementById("cancelBtn");
@@ -19,22 +19,40 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalTitle = document.getElementById("modalTitle");
   const yearFilter = document.getElementById("yearFilter");
 
-  // Load data
-  let students = loadData("students", []);
 
-  // Generate sequential student ID
-  function generateStudentId() {
-    // let lastId = loadData("lastStudentId", "2025000");
-    let lastId=JSON.parse(localStorage.getItem("lastStudentId")) || "2025000";
-    const newId = (parseInt(lastId, 10) + 1).toString();
-    saveData("lastStudentId", newId);
+  let students = [];
 
-    return newId;
+
+  async function getStudents() {
+    const res = await fetch(`${API_URL}/`);
+    if (!res.ok) throw new Error("Failed to fetch students");
+    return await res.json();
   }
 
-  // Save students array
-  function saveStudents() {
-    saveData("students", students);
+  async function createStudent(student) {
+    const res = await fetch(`${API_URL}/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(student),
+    });
+    if (!res.ok) throw new Error("Failed to create student");
+    return await res.json();
+  }
+
+  async function updateStudent(studentId, student) {
+    const res = await fetch(`${API_URL}/${studentId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(student),
+    });
+    if (!res.ok) throw new Error("Failed to update student");
+    return await res.json();
+  }
+
+  async function deleteStudent(studentId) {
+    const res = await fetch(`${API_URL}/${studentId}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Failed to delete student");
+    return true;
   }
 
   // Show modal for adding new student
@@ -53,36 +71,37 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Submit form
-  form.addEventListener("submit", (e) => {
+   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const year = parseInt(yearInput.value, 10);
-
     if (year < 1 || year > 4 || isNaN(year)) {
       alert("Year must be between 1 and 4");
       return;
     }
 
-    const student = {
-      id: editIndexInput.value ? students[editIndexInput.value].id : generateStudentId(),
-      name: nameInput.value,
+    const studentData = {
+      full_name: nameInput.value,
       email: emailInput.value,
-      birthday: bdayInput.value,
+      date_of_birth: bdayInput.value,
       phone: phoneInput.value,
       address: addressInput.value,
-      year: year
+      year: year,
     };
 
-    if (editIndexInput.value) {
-      // Update existing student
-      students[editIndexInput.value] = student;
-    } else {
-      // Add new student
-      students.push(student);
+    try {
+      if (editIndexInput.value) {
+        // Update existing student
+        const id = students[editIndexInput.value].id;
+        await updateStudent(id, studentData);
+      } else {
+        // Add new student
+        await createStudent(studentData);
+      }
+      await renderStudentsTable();
+    } catch (err) {
+      alert(err.message);
     }
-
-    saveStudents();
-    renderStudentsTable();
 
     modal.classList.add("hidden");
     modal.classList.remove("flex");
@@ -108,40 +127,77 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     tableBody.querySelectorAll(".deleteBtn").forEach((btn) => {
-      btn.onclick = () => {
-        const index = parseInt(btn.getAttribute("data-index")); // always parse as integer
-        deleteItem("students", students, index, renderStudentsTable);
+      btn.onclick = async () => {
+        const studentId = parseInt(btn.getAttribute("data-id"));
+        if (confirm("Are you sure you want to delete this student?")) {
+          try {
+            await deleteStudent(studentId);
+            await renderStudentsTable();
+          } catch (err) {
+            alert(err.message);
+          }
+        }
       };
-});
+    });
   }
 
-// Render students table
-function renderStudentsTable() {
-  // Sort by year
-  let filtered = [...students].sort((a, b) => a.year - b.year);
-
-  // Apply year filter
-  if (yearFilter && yearFilter.value !== "all") {
-    filtered = filtered.filter((s) => s.year === parseInt(yearFilter.value, 10));
-  }
-
-  // Define columns in order
-  const columns = ["id", "name", "email", "birthday", "phone", "address", "year"];
-
-
-  renderTable("studentsTableBody", filtered, columns, (student, index) => {
-    const div = document.createElement("div");
-    div.className = "space-x-2";
-    div.innerHTML = `
-      <button class="editBtn text-blue-600 hover:underline" data-index="${index}">Edit</button>
-      <button class="deleteBtn text-red-600 hover:underline" data-index="${index}">Delete</button>
+  // Render students table
+async function renderStudentsTable() {
+  try {
+    // Show loading state
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="8" class="border p-4 text-center text-gray-500">
+          Loading students...
+        </td>
+      </tr>
     `;
-    return div;
-  });
 
-  // Reattach events
-  attachRowEvents();
+    students = await getStudents();
+
+    // Sort by year
+    let filtered = [...students].sort((a, b) => a.year - b.year);
+
+    // Apply year filter
+    if (yearFilter && yearFilter.value !== "all") {
+      filtered = filtered.filter(
+        (s) => s.year === parseInt(yearFilter.value, 10)
+      );
+    }
+
+    // Define columns
+    const columns = [
+      "id",
+      "full_name",
+      "email",
+      "date_of_birth",
+      "phone",
+      "address",
+      "year",
+    ];
+
+    renderTable("studentsTableBody", filtered, columns, (student) => {
+      const div = document.createElement("div");
+      div.className = "space-x-2";
+      div.innerHTML = `
+        <button class="editBtn text-blue-600 hover:underline" data-id="${student.id}">Edit</button>
+        <button class="deleteBtn text-red-600 hover:underline" data-id="${student.id}">Delete</button>
+      `;
+      return div;
+    });
+
+    attachRowEvents();
+  } catch (err) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="8" class="border p-4 text-center text-red-500">
+          Error loading students: ${err.message}
+        </td>
+      </tr>
+    `;
+  }
 }
+
 
 
   // Filter change event
